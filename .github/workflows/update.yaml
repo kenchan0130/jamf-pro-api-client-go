@@ -36,8 +36,8 @@ jobs:
           fi
       - name: Show outputs
         run: |
-          echo "Check a schema - ${{ steps.check-schema.outputs.update }}"
-          echo "Check pull request existence - ${{ steps.check-pull-request.outputs.pr }}"
+          echo "Check schema - ${{ steps.check-schema.outputs.update }}"
+          echo "Check pull request - ${{ steps.check-pull-request.outputs.pr }}"
 
   create-pull-request:
     needs: check-latest-schema
@@ -56,6 +56,7 @@ jobs:
       - name: Install oapi-codegen
         run: go get github.com/deepmap/oapi-codegen/cmd/oapi-codegen
       - name: Update schema
+        run: |
           curl "${JAMF_PRO_API_SCHEMA_URL}/api/schema" > openapi.json
           make generate-client
         env:
