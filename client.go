@@ -1207,6 +1207,9 @@ type ClientInterface interface {
 	// GetV1Locales request
 	GetV1Locales(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetV1MacosManagedSoftwareUpdatesAvailableUpdates request
+	GetV1MacosManagedSoftwareUpdatesAvailableUpdates(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// PostV1MacosManagedSoftwareUpdatesSendUpdates request with any body
 	PostV1MacosManagedSoftwareUpdatesSendUpdatesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -1848,6 +1851,11 @@ type ClientInterface interface {
 	PostV2EnrollmentHistoryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PostV2EnrollmentHistory(ctx context.Context, body PostV2EnrollmentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostV2EnrollmentHistoryExport request with any body
+	PostV2EnrollmentHistoryExportWithBody(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostV2EnrollmentHistoryExport(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, body PostV2EnrollmentHistoryExportJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetV2EnrollmentLanguageCodes request
 	GetV2EnrollmentLanguageCodes(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -6933,6 +6941,18 @@ func (c *Client) GetV1Locales(ctx context.Context, reqEditors ...RequestEditorFn
 	return c.Client.Do(req)
 }
 
+func (c *Client) GetV1MacosManagedSoftwareUpdatesAvailableUpdates(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetV1MacosManagedSoftwareUpdatesAvailableUpdatesRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) PostV1MacosManagedSoftwareUpdatesSendUpdatesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostV1MacosManagedSoftwareUpdatesSendUpdatesRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -9731,6 +9751,30 @@ func (c *Client) PostV2EnrollmentHistoryWithBody(ctx context.Context, contentTyp
 
 func (c *Client) PostV2EnrollmentHistory(ctx context.Context, body PostV2EnrollmentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostV2EnrollmentHistoryRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostV2EnrollmentHistoryExportWithBody(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostV2EnrollmentHistoryExportRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostV2EnrollmentHistoryExport(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, body PostV2EnrollmentHistoryExportJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostV2EnrollmentHistoryExportRequest(c.Server, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -24357,6 +24401,33 @@ func NewGetV1LocalesRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewGetV1MacosManagedSoftwareUpdatesAvailableUpdatesRequest generates requests for GetV1MacosManagedSoftwareUpdatesAvailableUpdates
+func NewGetV1MacosManagedSoftwareUpdatesAvailableUpdatesRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v1/macos-managed-software-updates/available-updates")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewPostV1MacosManagedSoftwareUpdatesSendUpdatesRequest calls the generic PostV1MacosManagedSoftwareUpdatesSendUpdates builder with application/json body
 func NewPostV1MacosManagedSoftwareUpdatesSendUpdatesRequest(server string, body PostV1MacosManagedSoftwareUpdatesSendUpdatesJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -31925,6 +31996,146 @@ func NewPostV2EnrollmentHistoryRequestWithBody(server string, contentType string
 	return req, nil
 }
 
+// NewPostV2EnrollmentHistoryExportRequest calls the generic PostV2EnrollmentHistoryExport builder with application/json body
+func NewPostV2EnrollmentHistoryExportRequest(server string, params *PostV2EnrollmentHistoryExportParams, body PostV2EnrollmentHistoryExportJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostV2EnrollmentHistoryExportRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewPostV2EnrollmentHistoryExportRequestWithBody generates requests for PostV2EnrollmentHistoryExport with any type of body
+func NewPostV2EnrollmentHistoryExportRequestWithBody(server string, params *PostV2EnrollmentHistoryExportParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/v2/enrollment/history/export")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if params.ExportFields != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "export-fields", runtime.ParamLocationQuery, *params.ExportFields); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.ExportLabels != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "export-labels", runtime.ParamLocationQuery, *params.ExportLabels); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Page != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page", runtime.ParamLocationQuery, *params.Page); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.PageSize != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "page-size", runtime.ParamLocationQuery, *params.PageSize); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Sort != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "sort", runtime.ParamLocationQuery, *params.Sort); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	if params.Filter != nil {
+
+		if queryFrag, err := runtime.StyleParamWithLocation("form", true, "filter", runtime.ParamLocationQuery, *params.Filter); err != nil {
+			return nil, err
+		} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+			return nil, err
+		} else {
+			for k, v := range parsed {
+				for _, v2 := range v {
+					queryValues.Add(k, v2)
+				}
+			}
+		}
+
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewGetV2EnrollmentLanguageCodesRequest generates requests for GetV2EnrollmentLanguageCodes
 func NewGetV2EnrollmentLanguageCodesRequest(server string) (*http.Request, error) {
 	var err error
@@ -35493,6 +35704,9 @@ type ClientWithResponsesInterface interface {
 	// GetV1Locales request
 	GetV1LocalesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetV1LocalesResponse, error)
 
+	// GetV1MacosManagedSoftwareUpdatesAvailableUpdates request
+	GetV1MacosManagedSoftwareUpdatesAvailableUpdatesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse, error)
+
 	// PostV1MacosManagedSoftwareUpdatesSendUpdates request with any body
 	PostV1MacosManagedSoftwareUpdatesSendUpdatesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV1MacosManagedSoftwareUpdatesSendUpdatesResponse, error)
 
@@ -36134,6 +36348,11 @@ type ClientWithResponsesInterface interface {
 	PostV2EnrollmentHistoryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV2EnrollmentHistoryResponse, error)
 
 	PostV2EnrollmentHistoryWithResponse(ctx context.Context, body PostV2EnrollmentHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*PostV2EnrollmentHistoryResponse, error)
+
+	// PostV2EnrollmentHistoryExport request with any body
+	PostV2EnrollmentHistoryExportWithBodyWithResponse(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV2EnrollmentHistoryExportResponse, error)
+
+	PostV2EnrollmentHistoryExportWithResponse(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, body PostV2EnrollmentHistoryExportJSONRequestBody, reqEditors ...RequestEditorFn) (*PostV2EnrollmentHistoryExportResponse, error)
 
 	// GetV2EnrollmentLanguageCodes request
 	GetV2EnrollmentLanguageCodesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetV2EnrollmentLanguageCodesResponse, error)
@@ -43162,6 +43381,28 @@ func (r GetV1LocalesResponse) StatusCode() int {
 	return 0
 }
 
+type GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *AvailableUpdates
+}
+
+// Status returns HTTPResponse.Status
+func (r GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type PostV1MacosManagedSoftwareUpdatesSendUpdatesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -47091,6 +47332,29 @@ func (r PostV2EnrollmentHistoryResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostV2EnrollmentHistoryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostV2EnrollmentHistoryExportResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON400      *ApiError
+	JSON503      *ApiError
+}
+
+// Status returns HTTPResponse.Status
+func (r PostV2EnrollmentHistoryExportResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostV2EnrollmentHistoryExportResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -51892,6 +52156,15 @@ func (c *ClientWithResponses) GetV1LocalesWithResponse(ctx context.Context, reqE
 	return ParseGetV1LocalesResponse(rsp)
 }
 
+// GetV1MacosManagedSoftwareUpdatesAvailableUpdatesWithResponse request returning *GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse
+func (c *ClientWithResponses) GetV1MacosManagedSoftwareUpdatesAvailableUpdatesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse, error) {
+	rsp, err := c.GetV1MacosManagedSoftwareUpdatesAvailableUpdates(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse(rsp)
+}
+
 // PostV1MacosManagedSoftwareUpdatesSendUpdatesWithBodyWithResponse request with arbitrary body returning *PostV1MacosManagedSoftwareUpdatesSendUpdatesResponse
 func (c *ClientWithResponses) PostV1MacosManagedSoftwareUpdatesSendUpdatesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV1MacosManagedSoftwareUpdatesSendUpdatesResponse, error) {
 	rsp, err := c.PostV1MacosManagedSoftwareUpdatesSendUpdatesWithBody(ctx, contentType, body, reqEditors...)
@@ -53936,6 +54209,23 @@ func (c *ClientWithResponses) PostV2EnrollmentHistoryWithResponse(ctx context.Co
 		return nil, err
 	}
 	return ParsePostV2EnrollmentHistoryResponse(rsp)
+}
+
+// PostV2EnrollmentHistoryExportWithBodyWithResponse request with arbitrary body returning *PostV2EnrollmentHistoryExportResponse
+func (c *ClientWithResponses) PostV2EnrollmentHistoryExportWithBodyWithResponse(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostV2EnrollmentHistoryExportResponse, error) {
+	rsp, err := c.PostV2EnrollmentHistoryExportWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostV2EnrollmentHistoryExportResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostV2EnrollmentHistoryExportWithResponse(ctx context.Context, params *PostV2EnrollmentHistoryExportParams, body PostV2EnrollmentHistoryExportJSONRequestBody, reqEditors ...RequestEditorFn) (*PostV2EnrollmentHistoryExportResponse, error) {
+	rsp, err := c.PostV2EnrollmentHistoryExport(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostV2EnrollmentHistoryExportResponse(rsp)
 }
 
 // GetV2EnrollmentLanguageCodesWithResponse request returning *GetV2EnrollmentLanguageCodesResponse
@@ -63502,6 +63792,32 @@ func ParseGetV1LocalesResponse(rsp *http.Response) (*GetV1LocalesResponse, error
 	return response, nil
 }
 
+// ParseGetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse parses an HTTP response from a GetV1MacosManagedSoftwareUpdatesAvailableUpdatesWithResponse call
+func ParseGetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse(rsp *http.Response) (*GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetV1MacosManagedSoftwareUpdatesAvailableUpdatesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AvailableUpdates
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParsePostV1MacosManagedSoftwareUpdatesSendUpdatesResponse parses an HTTP response from a PostV1MacosManagedSoftwareUpdatesSendUpdatesWithResponse call
 func ParsePostV1MacosManagedSoftwareUpdatesSendUpdatesResponse(rsp *http.Response) (*PostV1MacosManagedSoftwareUpdatesSendUpdatesResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -68714,6 +69030,39 @@ func ParsePostV2EnrollmentHistoryResponse(rsp *http.Response) (*PostV2Enrollment
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
+		var dest ApiError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON503 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePostV2EnrollmentHistoryExportResponse parses an HTTP response from a PostV2EnrollmentHistoryExportWithResponse call
+func ParsePostV2EnrollmentHistoryExportResponse(rsp *http.Response) (*PostV2EnrollmentHistoryExportResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostV2EnrollmentHistoryExportResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ApiError
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 503:
 		var dest ApiError

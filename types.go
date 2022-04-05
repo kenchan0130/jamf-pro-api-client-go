@@ -1842,6 +1842,11 @@ type AuthorizationV1 struct {
 // AuthorizationV1AuthenticationType defines model for AuthorizationV1.AuthenticationType.
 type AuthorizationV1AuthenticationType string
 
+// AvailableUpdates defines model for AvailableUpdates.
+type AvailableUpdates struct {
+	AvailableUpdates *[]string `json:"availableUpdates,omitempty"`
+}
+
 // Request that start report generation
 type AzureAdMigrationReportProcessStatus struct {
 	MigrationReportFinishedEpoch int                                                      `json:"migrationReportFinishedEpoch"`
@@ -7589,6 +7594,26 @@ type GetV2EnrollmentHistoryParams struct {
 // PostV2EnrollmentHistoryJSONBody defines parameters for PostV2EnrollmentHistory.
 type PostV2EnrollmentHistoryJSONBody ObjectHistoryNote
 
+// PostV2EnrollmentHistoryExportJSONBody defines parameters for PostV2EnrollmentHistoryExport.
+type PostV2EnrollmentHistoryExportJSONBody ExportParameters
+
+// PostV2EnrollmentHistoryExportParams defines parameters for PostV2EnrollmentHistoryExport.
+type PostV2EnrollmentHistoryExportParams struct {
+	// Export fields parameter, used to change default order or ignore some of the response properties. Default is empty array, which means that all fields of the response entity will be serialized. Example: export-fields=id,username
+	ExportFields *ExportFields `json:"export-fields,omitempty"`
+
+	// Export labels parameter, used to customize fieldnames/columns in the exported file. Default is empty array, which means that response properties names will be used. Number of the provided labels must match the number of export-fields Example: export-labels=identifier,name with matching: export-fields=id,username
+	ExportLabels *ExportLabels `json:"export-labels,omitempty"`
+	Page         *Page         `json:"page,omitempty"`
+	PageSize     *PageSize     `json:"page-size,omitempty"`
+
+	// Sorting criteria in the format: property:asc/desc. Default sort is id:desc. Multiple sort criteria are supported and must be separated with a comma. Example: sort=id:desc,name:asc
+	Sort *[]string `json:"sort,omitempty"`
+
+	// Query in the RSQL format, allowing to filter history notes collection. Default filter is empty query - returning all results for the requested page. Fields allowed in the query: id, name. This param can be combined with paging and sorting. Example: name=="*script*"
+	Filter *string `json:"filter,omitempty"`
+}
+
 // GetV2EnrollmentLanguagesParams defines parameters for GetV2EnrollmentLanguages.
 type GetV2EnrollmentLanguagesParams struct {
 	Page     *Page     `json:"page,omitempty"`
@@ -8266,6 +8291,9 @@ type PutV2EnrollmentAccessGroupsServerIdGroupIdJSONRequestBody PutV2EnrollmentAc
 
 // PostV2EnrollmentHistoryJSONRequestBody defines body for PostV2EnrollmentHistory for application/json ContentType.
 type PostV2EnrollmentHistoryJSONRequestBody PostV2EnrollmentHistoryJSONBody
+
+// PostV2EnrollmentHistoryExportJSONRequestBody defines body for PostV2EnrollmentHistoryExport for application/json ContentType.
+type PostV2EnrollmentHistoryExportJSONRequestBody PostV2EnrollmentHistoryExportJSONBody
 
 // PutV2EnrollmentLanguagesLanguageIdJSONRequestBody defines body for PutV2EnrollmentLanguagesLanguageId for application/json ContentType.
 type PutV2EnrollmentLanguagesLanguageIdJSONRequestBody PutV2EnrollmentLanguagesLanguageIdJSONBody
