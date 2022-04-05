@@ -184,8 +184,8 @@
           "explode" : true,
           "schema" : {
             "type" : "string",
-            "default" : "ASC",
-            "enum" : [ "ASC", "DESC" ]
+            "enum" : [ "ASC", "DESC" ],
+            "default" : "ASC"
           }
         }, {
           "name" : "sortBy",
@@ -12154,6 +12154,26 @@
         "x-authentication-required" : false
       }
     },
+    "/v1/macos-managed-software-updates/available-updates" : {
+      "get" : {
+        "tags" : [ "macos-managed-software-updates" ],
+        "summary" : "Retrieve available MacOs Managed Software Updates",
+        "description" : "Retrieves available MacOs Managed Software Updates",
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AvailableUpdates"
+                }
+              }
+            }
+          }
+        },
+        "x-authentication-required" : true
+      }
+    },
     "/v1/macos-managed-software-updates/send-updates" : {
       "post" : {
         "tags" : [ "macos-managed-software-updates" ],
@@ -19153,6 +19173,93 @@
         "x-required-privileges" : [ "Update User-Initiated Enrollment" ]
       }
     },
+    "/v2/enrollment/history/export" : {
+      "post" : {
+        "tags" : [ "enrollment" ],
+        "summary" : "Export enrollment history collection\n",
+        "description" : "Export enrollment history collection\n",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/export-fields"
+        }, {
+          "$ref" : "#/components/parameters/export-labels"
+        }, {
+          "$ref" : "#/components/parameters/page"
+        }, {
+          "$ref" : "#/components/parameters/page-size"
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sorting criteria in the format: property:asc/desc. Default sort is id:desc. Multiple sort criteria are supported and must be separated with a comma. Example: sort=id:desc,name:asc ",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "default" : [ "id:asc" ]
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "Query in the RSQL format, allowing to filter history notes collection. Default filter is empty query - returning all results for the requested page. Fields allowed in the query: id, name. This param can be combined with paging and sorting. Example: name==\"*script*\"",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Optional. Override query parameters since they can make URI exceed 2,000 character limit.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExportParameters"
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Export successful",
+            "content" : {
+              "text/csv,application/json" : {
+                "schema" : {
+                  "format" : "binary",
+                  "example" : "Username,DATE,NOTES,Details\nadmin, 2022-02-04T11:56:26.343Z, Edited ,Re-enrollment Restricted true\n"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Export fields specified incorrectly - non-existing column or duplicate in the list.\nSupported columns: id,name,categoryName,categoryId,priority.\n",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "Export currently unavailable, all export-related resources are in use. Try again later.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "x-required-privileges" : [ "Read User-Initiated Enrollment" ],
+        "x-action" : true
+      }
+    },
     "/v2/enrollment/language-codes" : {
       "get" : {
         "tags" : [ "enrollment" ],
@@ -22325,6 +22432,18 @@
             "type" : "string",
             "example" : "JSS",
             "enum" : [ "JSS", "LDAP", "SAML", "INVITE", "OAUTH", "DEVICE_SIGNATURE", "CLOUD_CONNECTOR", "SYSTEM_ACCOUNT" ]
+          }
+        }
+      },
+      "AvailableUpdates" : {
+        "type" : "object",
+        "properties" : {
+          "availableUpdates" : {
+            "type" : "array",
+            "example" : [ "12.0.1", "11.6.1", "11.6", "11.5.2" ],
+            "items" : {
+              "type" : "string"
+            }
           }
         }
       },
@@ -26196,13 +26315,13 @@
           },
           "mdmProfileMobileDeviceExpirationLimitInDays" : {
             "type" : "integer",
-            "default" : 180,
-            "enum" : [ 90, 120, 180 ]
+            "enum" : [ 90, 120, 180 ],
+            "default" : 180
           },
           "mdmProfileComputerExpirationLimitInDays" : {
             "type" : "integer",
-            "default" : 180,
-            "enum" : [ 90, 120, 180 ]
+            "enum" : [ 90, 120, 180 ],
+            "default" : 180
           }
         }
       },
@@ -27541,8 +27660,8 @@
           },
           "flushMdmCommandsOnReenroll" : {
             "type" : "string",
-            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED",
-            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ]
+            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ],
+            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED"
           },
           "isEnabledMacosEnterpriseEnrollment" : {
             "type" : "boolean",
@@ -27559,8 +27678,8 @@
           },
           "passwordType" : {
             "type" : "string",
-            "default" : "STATIC",
-            "enum" : [ "STATIC", "RANDOM" ]
+            "enum" : [ "STATIC", "RANDOM" ],
+            "default" : "STATIC"
           },
           "randomPasswordLength" : {
             "type" : "integer",
@@ -27610,8 +27729,8 @@
           },
           "personalDeviceEnrollmentType" : {
             "type" : "string",
-            "default" : "PERSONALDEVICEPROFILES",
-            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ]
+            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ],
+            "default" : "PERSONALDEVICEPROFILES"
           }
         }
       },
@@ -27652,8 +27771,8 @@
           },
           "flushMdmCommandsOnReenroll" : {
             "type" : "string",
-            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED",
-            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ]
+            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ],
+            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED"
           },
           "macOsEnterpriseEnrollmentEnabled" : {
             "type" : "boolean",
@@ -27676,8 +27795,8 @@
           },
           "passwordType" : {
             "type" : "string",
-            "default" : "STATIC",
-            "enum" : [ "STATIC", "RANDOM" ]
+            "enum" : [ "STATIC", "RANDOM" ],
+            "default" : "STATIC"
           },
           "randomPasswordLength" : {
             "type" : "integer",
@@ -27727,8 +27846,8 @@
           },
           "personalDeviceEnrollmentType" : {
             "type" : "string",
-            "default" : "PERSONALDEVICEPROFILES",
-            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ]
+            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ],
+            "default" : "PERSONALDEVICEPROFILES"
           },
           "accountDrivenUserEnrollmentEnabled" : {
             "type" : "boolean",
@@ -28445,8 +28564,8 @@
           "frequency" : {
             "type" : "string",
             "example" : "DAILY",
-            "default" : "DAILY",
-            "enum" : [ "DAILY" ]
+            "enum" : [ "DAILY" ],
+            "default" : "DAILY"
           }
         }
       },
@@ -29505,8 +29624,8 @@
           "autoDeploymentType" : {
             "type" : "string",
             "description" : "Determines how the server will behave regarding application updates and installs on the devices that have the configuration profile installed. * `PATCH_UPDATES` - Server handles initial installation of the application and any patch updates. * `MINOR_AND_PATCH_UPDATES` - Server handles initial installation of the application and any patch and minor updates. * `INITIAL_INSTALLATION_ONLY` - Server only handles initial installation of the application. Updates will have to be done manually. * `NONE` - Server does not handle any installations or updates for the application. Version is ignored for this type.\n",
-            "default" : "NONE",
-            "enum" : [ "PATCH_UPDATES", "MINOR_AND_PATCH_UPDATES", "INITIAL_INSTALLATION_ONLY", "NONE" ]
+            "enum" : [ "PATCH_UPDATES", "MINOR_AND_PATCH_UPDATES", "INITIAL_INSTALLATION_ONLY", "NONE" ],
+            "default" : "NONE"
           }
         }
       },
@@ -32465,8 +32584,8 @@
             "type" : "string",
             "description" : "the default landing page in Self Service\n",
             "example" : "HOME",
-            "default" : "HOME",
-            "enum" : [ "HOME", "BROWSE", "HISTORY", "NOTIFICATIONS" ]
+            "enum" : [ "HOME", "BROWSE", "HISTORY", "NOTIFICATIONS" ],
+            "default" : "HOME"
           },
           "defaultHomeCategoryId" : {
             "type" : "integer",
@@ -33878,7 +33997,7 @@
           "contentType" : {
             "type" : "string",
             "readOnly" : true,
-            "example" : "APP",
+            "example" : "IOS_APP",
             "enum" : [ "IOS_APP", "MAC_APP", "BOOK" ]
           },
           "pricingParam" : {
