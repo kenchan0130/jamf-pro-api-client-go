@@ -12,7 +12,7 @@ jobs:
         run: |
           echo "::set-output name=version::$(grep -oE "^go [0-9]+\.[0-9]+" go.mod | awk '{print $2}')"
         id: go-version
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
           go-version: "${{ steps.go-version.outputs.version }}"
       - name: Cache
