@@ -184,8 +184,8 @@
           "explode" : true,
           "schema" : {
             "type" : "string",
-            "enum" : [ "ASC", "DESC" ],
-            "default" : "ASC"
+            "default" : "ASC",
+            "enum" : [ "ASC", "DESC" ]
           }
         }, {
           "name" : "sortBy",
@@ -779,6 +779,8 @@
             }
           }
         },
+        "deprecated" : true,
+        "x-deprecation-date" : "2022-02-18",
         "x-required-privileges" : [ "Read Patch Policies" ]
       }
     },
@@ -872,6 +874,8 @@
             }
           }
         },
+        "deprecated" : true,
+        "x-deprecation-date" : "2022-01-25",
         "x-required-privileges" : [ "Read Patch Management Software Titles" ]
       }
     },
@@ -1204,6 +1208,8 @@
             }
           }
         },
+        "deprecated" : true,
+        "x-deprecation-date" : "2022-02-18",
         "x-required-privileges" : [ "Read Patch Policies" ]
       }
     },
@@ -1227,8 +1233,10 @@
             "description" : "Accepted"
           }
         },
+        "deprecated" : true,
         "x-required-privileges" : [ "Update Patch Policies" ],
-        "x-action" : true
+        "x-action" : true,
+        "x-deprecation-date" : "2022-02-18"
       }
     },
     "/patch/searchActivePatchHistory" : {
@@ -1289,6 +1297,8 @@
             }
           }
         },
+        "deprecated" : true,
+        "x-deprecation-date" : "2022-02-18",
         "x-required-privileges" : [ "Read Patch Policies" ]
       }
     },
@@ -1328,8 +1338,10 @@
             "description" : "Accepted"
           }
         },
+        "deprecated" : true,
         "x-required-privileges" : [ "Update Patch Policies" ],
-        "x-action" : true
+        "x-action" : true,
+        "x-deprecation-date" : "2022-02-18"
       }
     },
     "/patch/{id}" : {
@@ -2472,10 +2484,12 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "Bearer" : [ ]
         } ],
-        "x-required-privileges" : [ "Read Sites" ]
+        "x-required-privileges" : [ "Read Sites" ],
+        "x-deprecation-date" : "2022-03-18"
       }
     },
     "/startup-status" : {
@@ -2751,6 +2765,65 @@
           }
         },
         "x-authentication-required" : true
+      }
+    },
+    "/v1/adue-session-token-settings" : {
+      "get" : {
+        "tags" : [ "enrollment" ],
+        "summary" : "Retrieve the Account Driven User Enrollment Session Token Settings\n",
+        "description" : "Retrieve the Account Driven User Enrollment Session Token Settings\n",
+        "responses" : {
+          "200" : {
+            "description" : "Successful response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountDrivenUserEnrollmentSessionTokenSettings"
+                }
+              }
+            }
+          }
+        },
+        "x-required-privileges" : [ "Read User-Initiated Enrollment" ]
+      },
+      "put" : {
+        "tags" : [ "enrollment" ],
+        "summary" : "Update Account Driven User Enrollment Session Token Settings.\n",
+        "description" : "Update the Account Driven User Enrollment Session Token Settings object.\n",
+        "requestBody" : {
+          "description" : "Update Account Driven User Enrollment Session Token Settings.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AccountDrivenUserEnrollmentSessionTokenSettings"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Successfully updated Account Driven User Enrollment Session Token Settings object",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountDrivenUserEnrollmentSessionTokenSettings"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid data response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "x-required-privileges" : [ "Update User-Initiated Enrollment" ]
       }
     },
     "/v1/advanced-mobile-device-searches" : {
@@ -5337,848 +5410,6 @@
         "x-required-privileges" : [ "Read LDAP Servers" ]
       }
     },
-    "/v1/cloud-ldaps" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get all Cloud Identity Providers configurations.",
-        "description" : "Returns all configured Cloud Identity Provider instances without keystore data.",
-        "parameters" : [ {
-          "$ref" : "#/components/parameters/page"
-        }, {
-          "$ref" : "#/components/parameters/size"
-        }, {
-          "$ref" : "#/components/parameters/pagesize"
-        }, {
-          "$ref" : "#/components/parameters/page-size"
-        }, {
-          "name" : "sort",
-          "in" : "query",
-          "description" : "Sorting criteria in the format: property:asc/desc. Default sort is id:asc. Multiple sort criteria are supported and must be separated with a comma. Example: sort=date:desc,name:asc ",
-          "required" : false,
-          "style" : "form",
-          "explode" : true,
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            },
-            "default" : [ "id:desc" ]
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider configurations returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DeprecatedConfigurationSearchResults"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      },
-      "post" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Create Cloud Identity Provider configuration",
-        "description" : "Create new Cloud Identity Provider configuration with unique display name. If mappings not provided, then defaults will be generated instead.",
-        "requestBody" : {
-          "description" : "Cloud Identity Provider configuration to create",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/DeprecatedConfigurationRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Cloud Identity Provider configuration created",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DeprecatedConfigurationResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Cloud Identity Provider configuration cannot be saved.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Create LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/defaults/mappings" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get default mappings",
-        "description" : "Get default mappings which will work with Google Cloud Identity Provider.",
-        "responses" : {
-          "200" : {
-            "description" : "Default mappings returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CloudLdapMappingsResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Files cannot be loaded.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/defaults/server-configuration" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get default server configuration",
-        "description" : "Get default server configuration which will work with Google Cloud Identity Provider.",
-        "responses" : {
-          "200" : {
-            "description" : "Default server configuration returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DeprecatedServerResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Default server configuration cannot be loaded.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get Cloud Identity Provider configuration with given id.",
-        "description" : "Get Cloud Identity Provider configuration with given id.",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider configuration returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DeprecatedConfigurationResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Id can only be a number.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Specified Cloud Identity Provider configuration does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      },
-      "put" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Old update Cloud Identity Provider configuration",
-        "description" : "Update Cloud Identity Provider configuration. Cannot be used for partial updates, all content body must be sent.",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "description" : "Cloud Identity Provider configuration to update",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/DeprecatedConfigurationUpdate"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider configuration updated",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DeprecatedConfigurationResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "One or more parameters were invalid.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Cloud Identity Provider configuration does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Update LDAP Servers" ]
-      },
-      "delete" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Delete Cloud Identity Provider configuration.",
-        "description" : "Delete Cloud Identity Provider configuration.",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "204" : {
-            "description" : "Cloud Identity Provider configuration deleted."
-          },
-          "400" : {
-            "description" : "Id can only be a number.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Cloud Identity Provider configuration does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Delete LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}/connection/bind" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get bind connection pool statistics",
-        "description" : "Get all search connection pool for chosen Cloud Identity Provider.\nnumConnectionsClosedDefunct - The number of connections that have been closed as defunct.\nnumConnectionsClosedExpired - The number of connections that have been closed because they were expired.\nnumConnectionsClosedUnneeded - The number of connections that have been closed because they were no longer needed.\nnumFailedCheckouts - The number of failed attempts to check out a connection from the pool.\nnumFailedConnectionAttempts - The number of failed attempts to create a connection for use in the pool.\nnumReleasedValid - The number of valid connections released back to the pool.\nnumSuccessfulCheckouts - The number of successful attempts to check out a connection from the pool.\nnumSuccessfulCheckoutsNewConnection - The number of successful checkout attempts that had to create a new connection because none were available.\nnumSuccessfulConnectionAttempts - The number successful attempts to create a connection for use in the pool.\nmaximumAvailableConnections - The maximum number of connections that may be available in the pool at any time.\nnumSuccessfulCheckoutsWithoutWait - The number of successful checkout attempts that were able to take an existing connection without waiting.\nnumSuccessfulCheckoutsAfterWait - The number of successful checkout attempts that retrieved a connection from the pool after waiting for it to become available.\nnumAvailableConnections - The number of connections currently available for use in the pool.\n",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider bind connection pool statistics returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CloudLdapConnectionPoolStatistics"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Bind connection pool statistics data is not available.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Cloud Identity Provider bind connection pool statistics does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}/connection/search" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get search connection pool statistics",
-        "description" : "Get all search connection pool for chosen Cloud Identity Provider.\nnumConnectionsClosedDefunct - The number of connections that have been closed as defunct.\nnumConnectionsClosedExpired - The number of connections that have been closed because they were expired.\nnumConnectionsClosedUnneeded - The number of connections that have been closed because they were no longer needed.\nnumFailedCheckouts - The number of failed attempts to check out a connection from the pool.\nnumFailedConnectionAttempts - The number of failed attempts to create a connection for use in the pool.\nnumReleasedValid - The number of valid connections released back to the pool.\nnumSuccessfulCheckouts - The number of successful attempts to check out a connection from the pool.\nnumSuccessfulCheckoutsNewConnection - The number of successful checkout attempts that had to create a new connection because none were available.\nnumSuccessfulConnectionAttempts - The number successful attempts to create a connection for use in the pool.\nmaximumAvailableConnections - The maximum number of connections that may be available in the pool at any time.\nnumSuccessfulCheckoutsWithoutWait - The number of successful checkout attempts that were able to take an existing connection without waiting.\nnumSuccessfulCheckoutsAfterWait - The number of successful checkout attempts that retrieved a connection from the pool after waiting for it to become available.\nnumAvailableConnections - The number of connections currently available for use in the pool.\n",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider search connection pool statistics returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CloudLdapConnectionPoolStatistics"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Search connection pool statistics data is not available.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Cloud Identity Provider search connection pool statistics does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}/history" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get Cloud Identity Provider history",
-        "description" : "Gets specified Cloud Identity Provider object history",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "$ref" : "#/components/parameters/page"
-        }, {
-          "$ref" : "#/components/parameters/size"
-        }, {
-          "$ref" : "#/components/parameters/pagesize"
-        }, {
-          "$ref" : "#/components/parameters/page-size"
-        }, {
-          "name" : "sort",
-          "in" : "query",
-          "description" : "Sorting criteria in the format: property:asc/desc. Default sort is date:desc. Multiple sort criteria are supported and must be separated with a comma. Example: sort=date:desc,name:asc ",
-          "required" : false,
-          "style" : "form",
-          "explode" : true,
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "type" : "string"
-            },
-            "default" : [ "date:desc" ]
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Details of Cloud Identity Provider history were found",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/HistorySearchResults"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Id can only be a number.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Specified Cloud Identity Provider object does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      },
-      "post" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Add Cloud Identity Provider history note",
-        "description" : "Adds specified Cloud Identity Provider object history notes\n",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "description" : "history notes to create",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/ObjectHistoryNote"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "201" : {
-            "description" : "Notes of Cloud Identity Provider history were added",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ObjectHistory"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Specified Cloud Identity Provider object does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "503" : {
-            "description" : "Notes of Cloud Identity Provider can not be saved",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Update LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}/mappings" : {
-      "get" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get mappings configurations for Cloud Identity Providers server configuration.",
-        "description" : "Get all mappings configurations for Cloud Identity Providers server configuration.",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider mappings configuration returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CloudLdapMappingsResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "Id can only be a number.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Specified mappings settings for Cloud Identity Provider configuration do not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      },
-      "put" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Update Cloud Identity Provider mappings configuration.",
-        "description" : "Update Cloud Identity Provider mappings configuration. Cannot be used for partial updates, all content body must be sent.",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "description" : "Cloud Identity Provider mappings to update.",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CloudLdapMappingsRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider mappings configuration updated.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CloudLdapMappingsResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "One or more parameters were invalid.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Specified Cloud Identity Provider configuration does not exist.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409" : {
-            "description" : "Cloud Identity Provider id from request path do not match id in request body.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Update LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}/test-group" : {
-      "post" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get group test search",
-        "description" : "Do test search to ensure about configuration and mappings",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "description" : "Search request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/GroupTestSearchRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider test search result returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/GroupTestSearchResponse"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Cloud Identity Provider does not exist or is not active.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-action" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}/test-user" : {
-      "post" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get user test search",
-        "description" : "Do test search to ensure about configuration and mappings",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "description" : "Search request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/UserTestSearchRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider test search result returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/UserTestSearchResponse"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Cloud Identity Provider does not exist or is not active.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-action" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      }
-    },
-    "/v1/cloud-ldaps/{id}/test-user-membership" : {
-      "post" : {
-        "tags" : [ "cloud-ldap" ],
-        "summary" : "Get membership test search",
-        "description" : "Do test search to ensure about configuration and mappings",
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "description" : "Cloud Identity Provider identifier",
-          "required" : true,
-          "style" : "simple",
-          "explode" : false,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "description" : "Search request",
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/MembershipTestSearchRequest"
-              }
-            }
-          },
-          "required" : true
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Cloud Identity Provider test search result returned.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/MembershipTestSearchResponse"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "Cloud Identity Provider does not exist or is not active.",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ApiError"
-                }
-              }
-            }
-          }
-        },
-        "deprecated" : true,
-        "x-action" : true,
-        "x-deprecation-date" : "2020-08-25",
-        "x-required-privileges" : [ "Read LDAP Servers" ]
-      }
-    },
     "/v1/computer-inventory-collection-settings" : {
       "get" : {
         "tags" : [ "computer-inventory-collection-settings" ],
@@ -6893,7 +6124,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ComputerInventoryResponse"
+                  "$ref" : "#/components/schemas/ComputerInventory"
                 }
               }
             }
@@ -6942,7 +6173,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ComputerInventoryResponse"
+                  "$ref" : "#/components/schemas/ComputerInventory"
                 }
               }
             }
@@ -6998,7 +6229,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ComputerInventoryResponse"
+                  "$ref" : "#/components/schemas/ComputerInventory"
                 }
               }
             }
@@ -11447,9 +10678,9 @@
     },
     "/v1/jamf-pro-information" : {
       "get" : {
-        "tags" : [ "jamf-pro-information-preview" ],
+        "tags" : [ "jamf-pro-information" ],
         "summary" : "Get basic information about the Jamf Pro Server\n",
-        "description" : "Preview version of the endpoint. There may still be some breaking changes in the future.\n",
+        "description" : "Deprecated version of the endpoint.\n",
         "responses" : {
           "200" : {
             "description" : "Successful response",
@@ -11462,6 +10693,8 @@
             }
           }
         },
+        "deprecated" : true,
+        "x-deprecation-date" : "2022-03-16",
         "x-authentication-required" : true
       }
     },
@@ -12185,6 +11418,30 @@
             "application/json" : {
               "schema" : {
                 "$ref" : "#/components/schemas/MacOsManagedSoftwareUpdate"
+              },
+              "examples" : {
+                "MacOsManagedSoftwareUpdateDeviceIds" : {
+                  "value" : {
+                    "deviceIds" : [ "1", "2", "3", "4" ],
+                    "maxDeferrals" : 7,
+                    "version" : "12.0.1",
+                    "skipVersionVerification" : false,
+                    "applyMajorUpdate" : false,
+                    "updateAction" : "DOWNLOAD_AND_INSTALL",
+                    "forceRestart" : false
+                  }
+                },
+                "MacOsManagedSoftwareUpdateGroupId" : {
+                  "value" : {
+                    "groupId" : 1,
+                    "maxDeferrals" : 7,
+                    "version" : "12.0.1",
+                    "skipVersionVerification" : false,
+                    "applyMajorUpdate" : false,
+                    "updateAction" : "DOWNLOAD_AND_INSTALL",
+                    "forceRestart" : false
+                  }
+                }
               }
             }
           },
@@ -14577,6 +13834,93 @@
         "x-required-privileges" : [ "Update Re-enrollment" ]
       }
     },
+    "/v1/reenrollment/history/export" : {
+      "post" : {
+        "tags" : [ "re-enrollment-preview" ],
+        "summary" : "Export reenrollment history collection\n",
+        "description" : "Export reenrollment history collection\n",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/export-fields"
+        }, {
+          "$ref" : "#/components/parameters/export-labels"
+        }, {
+          "$ref" : "#/components/parameters/page"
+        }, {
+          "$ref" : "#/components/parameters/page-size"
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sorting criteria in the format: property:asc/desc. Default sort is id:desc. Multiple sort criteria are supported and must be separated with a comma. Example: sort=id:desc,name:asc ",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "default" : [ "id:asc" ]
+          }
+        }, {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "Query in the RSQL format, allowing to filter history notes collection. Default filter is empty query - returning all results for the requested page. Fields allowed in the query: id, name. This param can be combined with paging and sorting. Example: name==\"*script*\"",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : ""
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Optional. Override query parameters since they can make URI exceed 2,000 character limit.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ExportParameters"
+              }
+            }
+          },
+          "required" : false
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Export successful",
+            "content" : {
+              "text/csv,application/json" : {
+                "schema" : {
+                  "format" : "binary",
+                  "example" : "Username,DATE,NOTES,Details\nadmin, 2022-02-04T11:56:26.343Z, Edited ,Re-enrollment Restricted true\n"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Export fields specified incorrectly - non-existing column or duplicate in the list.\nSupported columns: id,name,categoryName,categoryId,priority.\n",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "Export currently unavailable, all export-related resources are in use. Try again later.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "x-required-privileges" : [ "Read Re-enrollment" ],
+        "x-action" : true
+      }
+    },
     "/v1/scripts" : {
       "get" : {
         "tags" : [ "scripts" ],
@@ -15382,6 +14726,32 @@
           }
         },
         "x-required-privileges" : [ "Update Self Service" ]
+      }
+    },
+    "/v1/sites" : {
+      "get" : {
+        "tags" : [ "sites" ],
+        "summary" : "Find all sites\n",
+        "description" : "Find all sites.\n",
+        "responses" : {
+          "200" : {
+            "description" : "Successful response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/V1Site"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "Bearer" : [ ]
+        } ],
+        "x-required-privileges" : [ "Read Sites" ]
       }
     },
     "/v1/smart-computer-groups/{id}/recalculate" : {
@@ -19322,6 +18692,41 @@
         "x-required-privileges" : [ "Read User-Initiated Enrollment" ]
       }
     },
+    "/v2/enrollment/languages/delete-multiple" : {
+      "post" : {
+        "tags" : [ "enrollment" ],
+        "summary" : "Delete multiple configured languages from User-Initiated Enrollment settings\n",
+        "description" : "Delete multiple configured languages from User-Initiated Enrollment settings",
+        "requestBody" : {
+          "description" : "ids of each language to delete",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Ids"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "All languages ids passed in request sucessfully deleted."
+          },
+          "400" : {
+            "description" : "Request processed.  Returns ids and error codes of any language unable to be deleted.  Expected error codes: INVALID_ID - id does not exist SYSTEM_EXCEPTION - a system exception occurred trying to delete the language.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "x-required-privileges" : [ "Update User-Initiated Enrollment" ],
+        "x-action" : true
+      }
+    },
     "/v2/enrollment/languages/{languageId}" : {
       "get" : {
         "tags" : [ "enrollment" ],
@@ -20055,6 +19460,26 @@
           }
         },
         "x-required-privileges" : [ "Jamf Packages Action" ]
+      }
+    },
+    "/v2/jamf-pro-information" : {
+      "get" : {
+        "tags" : [ "jamf-pro-information" ],
+        "summary" : "Get basic information about the Jamf Pro Server\n",
+        "description" : "Get basic information about the Jamf Pro Server\n",
+        "responses" : {
+          "200" : {
+            "description" : "Successful response",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/JamfProInformationV2"
+                }
+              }
+            }
+          }
+        },
+        "x-authentication-required" : true
       }
     },
     "/v2/mobile-device-prestages" : {
@@ -21344,9 +20769,11 @@
             }
           }
         },
+        "deprecated" : true,
         "security" : [ {
           "Bearer" : [ ]
         } ],
+        "x-deprecation-date" : "2022-02-22",
         "x-required-privileges" : [ "Read Volume Purchasing Administrator Accounts" ]
       }
     },
@@ -21540,6 +20967,19 @@
           "currentSiteId" : {
             "type" : "integer",
             "example" : 1
+          }
+        }
+      },
+      "AccountDrivenUserEnrollmentSessionTokenSettings" : {
+        "type" : "object",
+        "properties" : {
+          "expirationIntervalDays" : {
+            "type" : "integer",
+            "example" : 1
+          },
+          "enabled" : {
+            "type" : "boolean",
+            "example" : false
           }
         }
       },
@@ -24631,123 +24071,7 @@
           }
         }
       },
-      "ComputerInventoryCollectionPreferences" : {
-        "type" : "object",
-        "properties" : {
-          "monitorApplicationUsage" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "includeFonts" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "includePlugins" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "includePackages" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "includeSoftwareUpdates" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "includeAccounts" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "calculateSizes" : {
-            "type" : "boolean",
-            "example" : false,
-            "default" : false
-          },
-          "includeHiddenAccounts" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "includePrinters" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "includeServices" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "collectSyncedMobileDeviceInfo" : {
-            "type" : "boolean",
-            "example" : false,
-            "default" : false
-          },
-          "updateLdapInfoOnComputerInventorySubmissions" : {
-            "type" : "boolean",
-            "example" : false,
-            "default" : false
-          },
-          "monitorBeacons" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : false
-          },
-          "allowChangingUserAndLocation" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : true
-          },
-          "useUnixUserPaths" : {
-            "type" : "boolean",
-            "example" : true,
-            "default" : true
-          }
-        }
-      },
-      "ComputerInventoryCollectionSettings" : {
-        "type" : "object",
-        "properties" : {
-          "computerInventoryCollectionPreferences" : {
-            "$ref" : "#/components/schemas/ComputerInventoryCollectionPreferences"
-          },
-          "applicationPaths" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/AppPath"
-            }
-          },
-          "fontPaths" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/FontPath"
-            }
-          },
-          "pluginPaths" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/PluginPath"
-            }
-          }
-        }
-      },
-      "ComputerInventoryRecoveryLockPasswordResponse" : {
-        "type" : "object",
-        "properties" : {
-          "recoveryLockPassword" : {
-            "type" : "string",
-            "readOnly" : true,
-            "example" : "password123"
-          }
-        }
-      },
-      "ComputerInventoryResponse" : {
+      "ComputerInventory" : {
         "type" : "object",
         "properties" : {
           "id" : {
@@ -24875,6 +24199,122 @@
           }
         }
       },
+      "ComputerInventoryCollectionPreferences" : {
+        "type" : "object",
+        "properties" : {
+          "monitorApplicationUsage" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "includeFonts" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "includePlugins" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "includePackages" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "includeSoftwareUpdates" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "includeAccounts" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "calculateSizes" : {
+            "type" : "boolean",
+            "example" : false,
+            "default" : false
+          },
+          "includeHiddenAccounts" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "includePrinters" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "includeServices" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "collectSyncedMobileDeviceInfo" : {
+            "type" : "boolean",
+            "example" : false,
+            "default" : false
+          },
+          "updateLdapInfoOnComputerInventorySubmissions" : {
+            "type" : "boolean",
+            "example" : false,
+            "default" : false
+          },
+          "monitorBeacons" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : false
+          },
+          "allowChangingUserAndLocation" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : true
+          },
+          "useUnixUserPaths" : {
+            "type" : "boolean",
+            "example" : true,
+            "default" : true
+          }
+        }
+      },
+      "ComputerInventoryCollectionSettings" : {
+        "type" : "object",
+        "properties" : {
+          "computerInventoryCollectionPreferences" : {
+            "$ref" : "#/components/schemas/ComputerInventoryCollectionPreferences"
+          },
+          "applicationPaths" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AppPath"
+            }
+          },
+          "fontPaths" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/FontPath"
+            }
+          },
+          "pluginPaths" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PluginPath"
+            }
+          }
+        }
+      },
+      "ComputerInventoryRecoveryLockPasswordResponse" : {
+        "type" : "object",
+        "properties" : {
+          "recoveryLockPassword" : {
+            "type" : "string",
+            "readOnly" : true,
+            "example" : "password123"
+          }
+        }
+      },
       "ComputerInventorySearchResults" : {
         "type" : "object",
         "properties" : {
@@ -24885,7 +24325,7 @@
           "results" : {
             "type" : "array",
             "items" : {
-              "$ref" : "#/components/schemas/ComputerInventoryResponse"
+              "$ref" : "#/components/schemas/ComputerInventory"
             }
           }
         }
@@ -26058,242 +25498,6 @@
           }
         }
       },
-      "DeprecatedConfigurationRequest" : {
-        "required" : [ "server" ],
-        "type" : "object",
-        "properties" : {
-          "server" : {
-            "$ref" : "#/components/schemas/DeprecatedServerRequest"
-          },
-          "mappings" : {
-            "$ref" : "#/components/schemas/CloudLdapMappingsRequest"
-          }
-        },
-        "description" : "An old Cloud Identity Provider configuration for requests"
-      },
-      "DeprecatedConfigurationResponse" : {
-        "required" : [ "id", "server" ],
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "minimum" : 1001,
-            "type" : "string",
-            "example" : "1001"
-          },
-          "server" : {
-            "$ref" : "#/components/schemas/DeprecatedServerResponse"
-          },
-          "mappings" : {
-            "$ref" : "#/components/schemas/CloudLdapMappingsResponse"
-          }
-        },
-        "description" : "An old Cloud Identity Provider configuration for responses"
-      },
-      "DeprecatedConfigurationSearchResults" : {
-        "type" : "object",
-        "properties" : {
-          "totalCount" : {
-            "type" : "integer",
-            "example" : 1
-          },
-          "results" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/components/schemas/DeprecatedConfigurationResponse"
-            }
-          }
-        },
-        "description" : "A list with old Cloud Identity Providers configurations"
-      },
-      "DeprecatedConfigurationUpdate" : {
-        "required" : [ "server" ],
-        "type" : "object",
-        "properties" : {
-          "server" : {
-            "$ref" : "#/components/schemas/DeprecatedServerUpdate"
-          },
-          "mappings" : {
-            "$ref" : "#/components/schemas/CloudLdapMappingsRequest"
-          }
-        },
-        "description" : "An old Cloud Identity Provider configuration for updates"
-      },
-      "DeprecatedServerRequest" : {
-        "required" : [ "connectionTimeout", "connectionType", "displayName", "domainName", "enabled", "keystore", "port", "providerName", "searchTimeout", "serverUrl", "useWildcards" ],
-        "type" : "object",
-        "properties" : {
-          "enabled" : {
-            "type" : "boolean",
-            "example" : true
-          },
-          "providerName" : {
-            "type" : "string",
-            "example" : "Google"
-          },
-          "displayName" : {
-            "type" : "string",
-            "example" : "Google Secure LDAP"
-          },
-          "serverUrl" : {
-            "type" : "string",
-            "example" : "ldap.google.com"
-          },
-          "domainName" : {
-            "type" : "string",
-            "example" : "jamf.com"
-          },
-          "port" : {
-            "maximum" : 65535,
-            "minimum" : 1,
-            "type" : "integer",
-            "example" : 636
-          },
-          "keystore" : {
-            "$ref" : "#/components/schemas/CloudLdapKeystoreFile"
-          },
-          "connectionTimeout" : {
-            "maximum" : 600.0,
-            "minimum" : 5,
-            "type" : "integer",
-            "example" : 15
-          },
-          "searchTimeout" : {
-            "maximum" : 600.0,
-            "minimum" : 5,
-            "type" : "integer",
-            "example" : 60
-          },
-          "useWildcards" : {
-            "type" : "boolean",
-            "example" : true
-          },
-          "connectionType" : {
-            "type" : "string",
-            "example" : "LDAPS",
-            "enum" : [ "LDAPS", "START_TLS" ]
-          }
-        },
-        "description" : "An old Cloud Identity Provider LDAP server configuration for requests"
-      },
-      "DeprecatedServerResponse" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "example" : "1001"
-          },
-          "enabled" : {
-            "type" : "boolean",
-            "example" : true
-          },
-          "providerName" : {
-            "type" : "string",
-            "example" : "Google"
-          },
-          "displayName" : {
-            "type" : "string",
-            "example" : "Google Secure LDAP"
-          },
-          "serverUrl" : {
-            "type" : "string",
-            "example" : "ldap.google.com"
-          },
-          "domainName" : {
-            "type" : "string",
-            "example" : "jamf.com"
-          },
-          "port" : {
-            "maximum" : 65535,
-            "minimum" : 1,
-            "type" : "integer",
-            "example" : 636
-          },
-          "keystore" : {
-            "$ref" : "#/components/schemas/CloudLdapKeystore"
-          },
-          "connectionTimeout" : {
-            "maximum" : 600.0,
-            "minimum" : 5,
-            "type" : "integer",
-            "example" : 15
-          },
-          "searchTimeout" : {
-            "maximum" : 600.0,
-            "minimum" : 5,
-            "type" : "integer",
-            "example" : 60
-          },
-          "useWildcards" : {
-            "type" : "boolean",
-            "example" : true
-          },
-          "connectionType" : {
-            "type" : "string",
-            "example" : "LDAPS",
-            "enum" : [ "LDAPS", "START_TLS" ]
-          }
-        },
-        "description" : "An old Cloud Identity Provider LDAP server configuration for responses"
-      },
-      "DeprecatedServerUpdate" : {
-        "required" : [ "connectionTimeout", "connectionType", "displayName", "domainName", "enabled", "id", "port", "providerName", "searchTimeout", "serverUrl", "useWildcards" ],
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "example" : "1001"
-          },
-          "enabled" : {
-            "type" : "boolean",
-            "example" : false
-          },
-          "providerName" : {
-            "type" : "string",
-            "example" : "Google"
-          },
-          "displayName" : {
-            "type" : "string",
-            "example" : "Google Secure LDAP"
-          },
-          "serverUrl" : {
-            "type" : "string",
-            "example" : "ldap.google.com"
-          },
-          "domainName" : {
-            "type" : "string",
-            "example" : "jamf.com"
-          },
-          "port" : {
-            "maximum" : 65535,
-            "minimum" : 1,
-            "type" : "integer",
-            "example" : 636
-          },
-          "keystore" : {
-            "$ref" : "#/components/schemas/CloudLdapKeystoreFile"
-          },
-          "connectionTimeout" : {
-            "minimum" : 1,
-            "type" : "integer",
-            "example" : 15
-          },
-          "searchTimeout" : {
-            "minimum" : 1,
-            "type" : "integer",
-            "example" : 60
-          },
-          "useWildcards" : {
-            "type" : "boolean",
-            "example" : true
-          },
-          "connectionType" : {
-            "type" : "string",
-            "example" : "LDAPS",
-            "enum" : [ "LDAPS", "START_TLS" ]
-          }
-        },
-        "description" : "An old Cloud Identity Provider LDAP server configuration for updates"
-      },
       "DeviceCommunicationSettings" : {
         "type" : "object",
         "properties" : {
@@ -26315,13 +25519,13 @@
           },
           "mdmProfileMobileDeviceExpirationLimitInDays" : {
             "type" : "integer",
-            "enum" : [ 90, 120, 180 ],
-            "default" : 180
+            "default" : 180,
+            "enum" : [ 90, 120, 180 ]
           },
           "mdmProfileComputerExpirationLimitInDays" : {
             "type" : "integer",
-            "enum" : [ 90, 120, 180 ],
-            "default" : 180
+            "default" : 180,
+            "enum" : [ 90, 120, 180 ]
           }
         }
       },
@@ -27109,6 +26313,10 @@
             "type" : "boolean",
             "example" : false
           },
+          "accountDrivenUserEnrollmentEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
           "requireEula" : {
             "type" : "boolean",
             "example" : false
@@ -27397,7 +26605,7 @@
         }
       },
       "EnrollmentCustomizationV2" : {
-        "required" : [ "description", "displayName", "enrollmentCustomizationBrandingSettings" ],
+        "required" : [ "description", "displayName", "enrollmentCustomizationBrandingSettings", "siteId" ],
         "type" : "object",
         "properties" : {
           "id" : {
@@ -27660,8 +26868,8 @@
           },
           "flushMdmCommandsOnReenroll" : {
             "type" : "string",
-            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ],
-            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED"
+            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED",
+            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ]
           },
           "isEnabledMacosEnterpriseEnrollment" : {
             "type" : "boolean",
@@ -27678,8 +26886,8 @@
           },
           "passwordType" : {
             "type" : "string",
-            "enum" : [ "STATIC", "RANDOM" ],
-            "default" : "STATIC"
+            "default" : "STATIC",
+            "enum" : [ "STATIC", "RANDOM" ]
           },
           "randomPasswordLength" : {
             "type" : "integer",
@@ -27729,8 +26937,8 @@
           },
           "personalDeviceEnrollmentType" : {
             "type" : "string",
-            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ],
-            "default" : "PERSONALDEVICEPROFILES"
+            "default" : "PERSONALDEVICEPROFILES",
+            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ]
           }
         }
       },
@@ -27771,8 +26979,8 @@
           },
           "flushMdmCommandsOnReenroll" : {
             "type" : "string",
-            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ],
-            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED"
+            "default" : "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED",
+            "enum" : [ "DELETE_NOTHING", "DELETE_ERRORS", "DELETE_EVERYTHING_EXCEPT_ACKNOWLEDGED", "DELETE_EVERYTHING" ]
           },
           "macOsEnterpriseEnrollmentEnabled" : {
             "type" : "boolean",
@@ -27795,8 +27003,8 @@
           },
           "passwordType" : {
             "type" : "string",
-            "enum" : [ "STATIC", "RANDOM" ],
-            "default" : "STATIC"
+            "default" : "STATIC",
+            "enum" : [ "STATIC", "RANDOM" ]
           },
           "randomPasswordLength" : {
             "type" : "integer",
@@ -27846,8 +27054,8 @@
           },
           "personalDeviceEnrollmentType" : {
             "type" : "string",
-            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ],
-            "default" : "PERSONALDEVICEPROFILES"
+            "default" : "PERSONALDEVICEPROFILES",
+            "enum" : [ "USERENROLLMENT", "PERSONALDEVICEPROFILES" ]
           },
           "accountDrivenUserEnrollmentEnabled" : {
             "type" : "boolean",
@@ -28564,8 +27772,8 @@
           "frequency" : {
             "type" : "string",
             "example" : "DAILY",
-            "enum" : [ "DAILY" ],
-            "default" : "DAILY"
+            "default" : "DAILY",
+            "enum" : [ "DAILY" ]
           }
         }
       },
@@ -29414,6 +28622,43 @@
           }
         }
       },
+      "JamfProInformationV2" : {
+        "type" : "object",
+        "properties" : {
+          "vppTokenEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "depAccountEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "byodEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "userMigrationEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "cloudDeploymentsEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "patchEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "ssoSamlEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "smtpEnabled" : {
+            "type" : "boolean",
+            "example" : false
+          }
+        }
+      },
       "JamfProServerUrl" : {
         "required" : [ "unsecuredEnrollmentUrl", "url" ],
         "type" : "object",
@@ -29624,8 +28869,8 @@
           "autoDeploymentType" : {
             "type" : "string",
             "description" : "Determines how the server will behave regarding application updates and installs on the devices that have the configuration profile installed. * `PATCH_UPDATES` - Server handles initial installation of the application and any patch updates. * `MINOR_AND_PATCH_UPDATES` - Server handles initial installation of the application and any patch and minor updates. * `INITIAL_INSTALLATION_ONLY` - Server only handles initial installation of the application. Updates will have to be done manually. * `NONE` - Server does not handle any installations or updates for the application. Version is ignored for this type.\n",
-            "enum" : [ "PATCH_UPDATES", "MINOR_AND_PATCH_UPDATES", "INITIAL_INSTALLATION_ONLY", "NONE" ],
-            "default" : "NONE"
+            "default" : "NONE",
+            "enum" : [ "PATCH_UPDATES", "MINOR_AND_PATCH_UPDATES", "INITIAL_INSTALLATION_ONLY", "NONE" ]
           }
         }
       },
@@ -29870,7 +29115,6 @@
         }
       },
       "MacOsManagedSoftwareUpdate" : {
-        "required" : [ "deviceIds" ],
         "type" : "object",
         "properties" : {
           "deviceIds" : {
@@ -29879,6 +29123,10 @@
             "items" : {
               "type" : "string"
             }
+          },
+          "groupId" : {
+            "type" : "string",
+            "example" : "1"
           },
           "maxDeferrals" : {
             "minimum" : 0,
@@ -29891,11 +29139,29 @@
             "description" : "If no value is provided, the version will default to latest version based on device eligibility.",
             "example" : "12.0.1"
           },
+          "skipVersionVerification" : {
+            "type" : "boolean",
+            "description" : "If no value is provided, the skipVersionVerification will default to false. If a value is provided, the specified version will be forced to complete DownloadAndInstall install action.",
+            "example" : false,
+            "default" : false
+          },
+          "applyMajorUpdate" : {
+            "type" : "boolean",
+            "description" : "ApplyMajorUpdate setting is available only when updating to the latest version based on device eligibility. If no value is provided, the calculated latest version will only include minor version updates. If a value is provided, the calculated latest version will include minor and major version updates.",
+            "example" : false,
+            "default" : false
+          },
           "updateAction" : {
             "type" : "string",
             "description" : "MaxDeferral is ignored if using the DownloadOnly install action.",
             "example" : "DOWNLOAD_AND_INSTALL",
             "enum" : [ "DOWNLOAD_AND_INSTALL", "DOWNLOAD_ONLY" ]
+          },
+          "forceRestart" : {
+            "type" : "boolean",
+            "description" : "If not set, forceRestart will default to false. Can only be true if using the DownloadAndInstall install action and the devices the command is sent to are on macOs 11 or higher. If true, the DownloadAndInstall action is performed, a restart will be forced. MaxDeferral will be ignored if defined. ",
+            "example" : false,
+            "default" : false
           }
         }
       },
@@ -31061,7 +30327,7 @@
       },
       "NotificationType" : {
         "type" : "string",
-        "enum" : [ "APNS_CERT_REVOKED", "APNS_CONNECTION_FAILURE", "APPLE_SCHOOL_MANAGER_T_C_NOT_SIGNED", "BUILT_IN_CA_EXPIRED", "BUILT_IN_CA_EXPIRING", "BUILT_IN_CA_RENEWAL_FAILED", "BUILT_IN_CA_RENEWAL_SUCCESS", "CLOUD_LDAP_CERT_EXPIRED", "CLOUD_LDAP_CERT_WILL_EXPIRE", "COMPUTER_SECURITY_SSL_DISABLED", "DEP_INSTANCE_EXPIRED", "DEP_INSTANCE_WILL_EXPIRE", "DEVICE_ENROLLMENT_PROGRAM_T_C_NOT_SIGNED", "EXCEEDED_LICENSE_COUNT", "FREQUENT_INVENTORY_COLLECTION_POLICY", "GSX_CERT_EXPIRED", "GSX_CERT_WILL_EXPIRE", "HCL_BIND_ERROR", "HCL_ERROR", "INSECURE_LDAP", "INVALID_REFERENCES_EXT_ATTR", "INVALID_REFERENCES_POLICIES", "INVALID_REFERENCES_SCRIPTS", "JAMF_CONNECT_UPDATE", "JAMF_PROTECT_UPDATE", "JIM_ERROR", "LDAP_CONNECTION_CHECK_THROUGH_JIM_FAILED", "LDAP_CONNECTION_CHECK_THROUGH_JIM_SUCCESSFUL", "MDM_EXTERNAL_SIGNING_CERTIFICATE_EXPIRED", "MDM_EXTERNAL_SIGNING_CERTIFICATE_EXPIRING", "MDM_EXTERNAL_SIGNING_CERTIFICATE_EXPIRING_TODAY", "MII_HEARTBEAT_FAILED_NOTIFICATION", "MII_INVENTORY_UPLOAD_FAILED_NOTIFICATION", "MII_UNATHORIZED_RESPONSE_NOTIFICATION", "PATCH_EXTENTION_ATTRIBUTE", "PATCH_UPDATE", "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_MULTIPLE", "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_SINGLE", "PUSH_CERT_EXPIRED", "PUSH_CERT_WILL_EXPIRE", "PUSH_PROXY_CERT_EXPIRED", "SSO_CERT_EXPIRED", "SSO_CERT_WILL_EXPIRE", "TOMCAT_SSL_CERT_EXPIRED", "TOMCAT_SSL_CERT_WILL_EXPIRE", "USER_INITIATED_ENROLLMENT_MANAGEMENT_ACCOUNT_SECURITY_ISSUE", "USER_MAID_DUPLICATE_ERROR", "USER_MAID_MISMATCH_ERROR", "USER_MAID_ROSTER_DUPLICATE_ERROR", "VPP_ACCOUNT_EXPIRED", "VPP_ACCOUNT_WILL_EXPIRE", "VPP_TOKEN_REVOKED", "DEVICE_COMPLIANCE_CONNECTION_ERROR", "CONDITIONAL_ACCESS_CONNECTION_ERROR", "AZURE_AD_MIGRATION_REPORT_GENERATED" ]
+        "enum" : [ "APNS_CERT_REVOKED", "APNS_CONNECTION_FAILURE", "APPLE_SCHOOL_MANAGER_T_C_NOT_SIGNED", "BUILT_IN_CA_EXPIRED", "BUILT_IN_CA_EXPIRING", "BUILT_IN_CA_RENEWAL_FAILED", "BUILT_IN_CA_RENEWAL_SUCCESS", "CLOUD_LDAP_CERT_EXPIRED", "CLOUD_LDAP_CERT_WILL_EXPIRE", "COMPUTER_SECURITY_SSL_DISABLED", "DEP_INSTANCE_EXPIRED", "DEP_INSTANCE_WILL_EXPIRE", "DEVICE_ENROLLMENT_PROGRAM_T_C_NOT_SIGNED", "EXCEEDED_LICENSE_COUNT", "FREQUENT_INVENTORY_COLLECTION_POLICY", "GSX_CERT_EXPIRED", "GSX_CERT_WILL_EXPIRE", "HCL_BIND_ERROR", "HCL_ERROR", "INSECURE_LDAP", "INVALID_REFERENCES_EXT_ATTR", "INVALID_REFERENCES_POLICIES", "INVALID_REFERENCES_SCRIPTS", "JAMF_CONNECT_UPDATE", "JAMF_PROTECT_UPDATE", "JIM_ERROR", "LDAP_CONNECTION_CHECK_THROUGH_JIM_FAILED", "LDAP_CONNECTION_CHECK_THROUGH_JIM_SUCCESSFUL", "MDM_EXTERNAL_SIGNING_CERTIFICATE_EXPIRED", "MDM_EXTERNAL_SIGNING_CERTIFICATE_EXPIRING", "MDM_EXTERNAL_SIGNING_CERTIFICATE_EXPIRING_TODAY", "MII_HEARTBEAT_FAILED_NOTIFICATION", "MII_INVENTORY_UPLOAD_FAILED_NOTIFICATION", "MII_UNATHORIZED_RESPONSE_NOTIFICATION", "PATCH_EXTENTION_ATTRIBUTE", "PATCH_UPDATE", "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_MULTIPLE", "POLICY_MANAGEMENT_ACCOUNT_PAYLOAD_SECURITY_SINGLE", "PUSH_CERT_EXPIRED", "PUSH_CERT_WILL_EXPIRE", "PUSH_PROXY_CERT_EXPIRED", "SSO_CERT_EXPIRED", "SSO_CERT_WILL_EXPIRE", "TOMCAT_SSL_CERT_EXPIRED", "TOMCAT_SSL_CERT_WILL_EXPIRE", "USER_INITIATED_ENROLLMENT_MANAGEMENT_ACCOUNT_SECURITY_ISSUE", "USER_MAID_DUPLICATE_ERROR", "USER_MAID_MISMATCH_ERROR", "USER_MAID_ROSTER_DUPLICATE_ERROR", "VPP_ACCOUNT_EXPIRED", "VPP_ACCOUNT_WILL_EXPIRE", "VPP_TOKEN_REVOKED", "DEVICE_COMPLIANCE_CONNECTION_ERROR", "CONDITIONAL_ACCESS_CONNECTION_ERROR", "AZURE_AD_MIGRATION_REPORT_GENERATED", "BEYOND_CORP_CONNECTION_ERROR" ]
       },
       "NotificationV1" : {
         "type" : "object",
@@ -31250,7 +30516,10 @@
             "example" : true
           },
           "safelistedApps" : {
-            "$ref" : "#/components/schemas/SafelistedApps"
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SafelistedApp"
+            }
           }
         }
       },
@@ -32286,19 +31555,16 @@
           }
         }
       },
-      "SafelistedApps" : {
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "name" : {
-              "type" : "string",
-              "example" : "Content Filter"
-            },
-            "bundleId" : {
-              "type" : "string",
-              "example" : "com.jamf.parent"
-            }
+      "SafelistedApp" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "example" : "Content Filter"
+          },
+          "bundleId" : {
+            "type" : "string",
+            "example" : "com.jamf.parent"
           }
         }
       },
@@ -32584,8 +31850,8 @@
             "type" : "string",
             "description" : "the default landing page in Self Service\n",
             "example" : "HOME",
-            "enum" : [ "HOME", "BROWSE", "HISTORY", "NOTIFICATIONS" ],
-            "default" : "HOME"
+            "default" : "HOME",
+            "enum" : [ "HOME", "BROWSE", "HISTORY", "NOTIFICATIONS" ]
           },
           "defaultHomeCategoryId" : {
             "type" : "integer",
@@ -33413,7 +32679,10 @@
             "example" : 600
           },
           "safelistedApps" : {
-            "$ref" : "#/components/schemas/SafelistedApps"
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SafelistedApp"
+            }
           }
         }
       },
@@ -33444,7 +32713,10 @@
             "$ref" : "#/components/schemas/TeacherFeatures"
           },
           "safelistedApps" : {
-            "$ref" : "#/components/schemas/SafelistedApps"
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SafelistedApp"
+            }
           }
         }
       },
@@ -33517,6 +32789,12 @@
             "type" : "array",
             "items" : {
               "$ref" : "#/components/schemas/ConfigurationProfile"
+            }
+          },
+          "certificates" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/MobileDeviceCertificateV2"
             }
           }
         },
