@@ -16,7 +16,7 @@ jobs:
         with:
           go-version: "${{ steps.go-version.outputs.version }}"
       - name: Cache
-        uses: actions/cache@v3.0.2
+        uses: actions/cache@v3.0.4
         id: cache-go
         with:
           path: ~/go/pkg/mod
